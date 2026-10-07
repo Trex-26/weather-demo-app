@@ -94,6 +94,7 @@ npm run preview
 ```
 
 ---
+live demo- https://weather-demo-app-withapi.netlify.app/
 
 ## 🔒 Security & Privacy
 
