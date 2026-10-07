@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { getConditionFromCode } from "../services/weather/weatherCodes";
 
 /* ─── Sunny ─── */
 function SunnyIcon({ size = 80 }) {
@@ -308,10 +309,46 @@ function DetailIcon({ type, size = 20 }) {
   return icons[type] || null;
 }
 
+/* ─── Clear Night (Moon) ─── */
+function MoonIcon({ size = 80 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 80 80" fill="none">
+      <path
+        d="M48 18C36.954 18 28 26.954 28 38C28 49.046 36.954 58 48 58C52.28 58 56.24 56.66 59.5 54.38C47.5 53.5 38 43.5 38 31C38 25.5 40.2 20.5 43.8 16.8C45.2 17.5 46.6 18 48 18Z"
+        fill="#FDE047"
+        className="animate-[sun-glow_3s_ease-in-out_infinite]"
+      />
+      <circle cx="56" cy="24" r="1.5" fill="#FEF08A" className="animate-[ray-pulse_2s_ease-in-out_infinite]" />
+      <circle cx="62" cy="38" r="1" fill="#FEF08A" className="animate-[ray-pulse_2.5s_ease-in-out_infinite]" style={{ animationDelay: "0.8s" }} />
+      <circle cx="24" cy="28" r="1.5" fill="#FEF08A" className="animate-[ray-pulse_1.8s_ease-in-out_infinite]" style={{ animationDelay: "0.4s" }} />
+    </svg>
+  );
+}
+
+/* ─── Partly Cloudy Night ─── */
+function PartlyCloudyNightIcon({ size = 80 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 80 80" fill="none">
+      <path
+        d="M52 18C44 18 37.5 24.5 37.5 32.5C37.5 36.5 39 40 41.5 42.5C33 42 27 34 27.5 25C28.5 20 32 16 36 14C35 15.5 34.5 17 34.5 19C34.5 26.5 40.5 32.5 48 32.5C50 32.5 51.5 32 53 31C52.7 33 52 18 52 18Z"
+        fill="#FDE047"
+        className="animate-[sun-glow_3s_ease-in-out_infinite]"
+      />
+      <g className="animate-[cloud-bob_4s_ease-in-out_infinite]">
+        <ellipse cx="38" cy="50" rx="18" ry="10" fill="white" opacity="0.9" />
+        <ellipse cx="29" cy="46" rx="12" ry="10" fill="white" opacity="0.9" />
+        <ellipse cx="45" cy="44" rx="14" ry="11" fill="white" opacity="0.95" />
+      </g>
+    </svg>
+  );
+}
+
 /* ─── Icon mapping ─── */
 const conditionToIcon = {
+  clear: SunnyIcon,
   sunny: SunnyIcon,
   "clear sky": SunnyIcon,
+  "mainly clear": SunnyIcon,
   "humid & sunny": SunnyIcon,
   "partly cloudy": PartlyCloudyIcon,
   cloudy: CloudyIcon,
@@ -323,6 +360,7 @@ const conditionToIcon = {
   thunderstorm: ThunderstormIcon,
   storm: ThunderstormIcon,
   wind: WindyIcon,
+  windy: WindyIcon,
   breezy: WindyIcon,
   fog: FogIcon,
   foggy: FogIcon,
@@ -330,13 +368,49 @@ const conditionToIcon = {
   scorching: ScorchingIcon,
   hot: ScorchingIcon,
   snow: SnowIcon,
+  "heavy snow": SnowIcon,
   monsoon: RainIcon,
 };
 
-export function getWeatherIcon(condition, size) {
-  const key = condition.toLowerCase();
+export function getWeatherIcon(conditionOrCode, size, isDay = true) {
+  let conditionStr = conditionOrCode;
+  let code = typeof conditionOrCode === "number" ? conditionOrCode : null;
+
+  if (typeof conditionOrCode === "number") {
+    const info = getConditionFromCode(conditionOrCode);
+    conditionStr = info.condition;
+  }
+
+  const key = (conditionStr || "").toString().toLowerCase().trim();
+
+  // If night time (isDay === false)
+  if (isDay === false) {
+    if (code === 0 || code === 1 || key === "clear" || key === "sunny" || key === "clear sky" || key === "mainly clear" || key === "humid & sunny") {
+      return <MoonIcon size={size} />;
+    }
+    if (code === 2 || key === "partly cloudy") {
+      return <PartlyCloudyNightIcon size={size} />;
+    }
+  }
+
   const IconComponent = conditionToIcon[key] || SunnyIcon;
   return <IconComponent size={size} />;
 }
 
-export { SunnyIcon, PartlyCloudyIcon, CloudyIcon, RainIcon, DrizzleIcon, ThunderstormIcon, WindyIcon, FogIcon, ScorchingIcon, SnowIcon, DetailIcon };
+export {
+  SunnyIcon,
+  MoonIcon,
+  PartlyCloudyIcon,
+  PartlyCloudyNightIcon,
+  CloudyIcon,
+  RainIcon,
+  DrizzleIcon,
+  ThunderstormIcon,
+  WindyIcon,
+  FogIcon,
+  ScorchingIcon,
+  SnowIcon,
+  DetailIcon,
+};
+
+

@@ -27,6 +27,14 @@ body {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
 }
 
+.light .search-dropdown {
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(30px) saturate(1.8) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(1.8) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+}
+
 .light .text-white { color: #1e293b; }
 .light .text-white\/80 { color: rgba(30, 41, 59, 0.8); }
 .light .text-white\/70 { color: rgba(30, 41, 59, 0.7); }
@@ -104,14 +112,25 @@ body {
   animation: swipe-in 0.3s ease-out forwards;
 }
 
-/* Hide scrollbar on horizontal scroll containers */
+/* Horizontal scroll containers with sleek scrollbar */
 .scroll-mobile {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 .scroll-mobile::-webkit-scrollbar {
-  display: none;
+  height: 5px;
+}
+.scroll-mobile::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-mobile::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 9999px;
+}
+.scroll-mobile::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.45);
 }
 
 /* Smoother scrolling on mobile */
@@ -195,6 +214,16 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.15),
     inset 0 -1px 0 rgba(255, 255, 255, 0.08);
   transform-style: preserve-3d;
+}
+
+.search-dropdown {
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(30px) saturate(1.8);
+  -webkit-backdrop-filter: blur(30px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.3);
+  z-index: 1000 !important;
+  transform: translateZ(150px);
 }
 
 /* 3D hover lift effect */
@@ -638,3 +667,40 @@ body {
   30% { opacity: 1; }
   100% { opacity: 0; transform: translateY(6px); }
 }
+
+/* ═══════════════════════════════════════════
+   UTILITY ENHANCEMENTS & MAP
+   ═══════════════════════════════════════════ */
+
+.text-2xs {
+  font-size: 0.65rem;
+  line-height: 0.85rem;
+}
+
+.scale-102 {
+  transform: scale(1.02);
+}
+
+.leaflet-container {
+  font-family: inherit;
+  background-color: #0f172a !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

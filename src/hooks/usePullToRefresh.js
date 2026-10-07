@@ -8,7 +8,7 @@ import { useState, useRef, useCallback } from "react";
  * @param {number} [options.maxPull=120] - Maximum pull distance
  * @returns {{ pullDistance, isRefreshing, handlers }}
  */
-export function usePullToRefresh({ onRefresh, threshold = 80, maxPull = 120 }) {
+export function usePullToRefresh({ onRefresh, threshold = 80, maxPull = 100 }) {
   const [pullDistance, setPullDistance] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const startY = useRef(0);

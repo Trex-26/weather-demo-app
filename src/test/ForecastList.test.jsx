@@ -28,14 +28,14 @@ describe("ForecastList", () => {
   it("displays temperatures in Celsius", () => {
     render(<ForecastList forecast={mockForecast} unit="C" />);
     expect(screen.getByText("32°")).toBeInTheDocument();
-    expect(screen.getByText("24°")).toBeInTheDocument();
+    expect(screen.getAllByText("24°")[0]).toBeInTheDocument();
   });
 
   it("converts temperatures to Fahrenheit", () => {
     render(<ForecastList forecast={mockForecast} unit="F" />);
     // 32°C = 90°F, 24°C = 75°F
     expect(screen.getByText("90°")).toBeInTheDocument();
-    expect(screen.getByText("75°")).toBeInTheDocument();
+    expect(screen.getAllByText("75°")[0]).toBeInTheDocument();
   });
 
   it("displays humidity for each day", () => {

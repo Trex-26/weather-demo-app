@@ -1,10 +1,11 @@
 import { useMemo } from "react";
+import { getBackgroundCategory as getCategoryFromCode } from "../services/weather/weatherCodes";
 
 /**
  * Maps a weather condition string to a category for background selection.
  */
 function getConditionCategory(condition) {
-  const c = condition.toLowerCase();
+  const c = (condition || "").toLowerCase();
   if (c.includes("thunder") || c.includes("storm")) return "thunderstorm";
   if (c.includes("rain") || c.includes("drizzle") || c.includes("monsoon")) return "rain";
   if (c.includes("snow") || c.includes("blizzard")) return "snow";
@@ -14,6 +15,7 @@ function getConditionCategory(condition) {
   if (c.includes("scorching") || c.includes("hot")) return "hot";
   return "clear";
 }
+
 
 /* ─── Particle generators ─── */
 
@@ -185,9 +187,60 @@ function HotShimmer() {
   );
 }
 
+function NightStars() {
+  const stars = useMemo(
+    () =>
+      Array.from({ length: 45 }, (_, i) => ({
+        id: i,
+        top: Math.random() * 70,
+        left: Math.random() * 100,
+        delay: Math.random() * 3,
+        duration: 1.5 + Math.random() * 2,
+        size: 1.5 + Math.random() * 2,
+        opacity: 0.3 + Math.random() * 0.7,
+      })),
+    []
+  );
+  return (
+    <div className="weather-layer">
+      {stars.map((s) => (
+        <div
+          key={s.id}
+          className="absolute rounded-full bg-amber-100"
+          style={{
+            top: `${s.top}%`,
+            left: `${s.left}%`,
+            width: `${s.size}px`,
+            height: `${s.size}px`,
+            opacity: s.opacity,
+            animation: `pulse-glow ${s.duration}s ease-in-out infinite`,
+            animationDelay: `${s.delay}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 /* ─── Background configs per condition ─── */
 
-function getBackgroundConfig(category) {
+function getBackgroundConfig(category, isDay = true) {
+  // If nighttime and clear / mainly clear sky
+  if (isDay === false && (category === "clear" || category === "hot")) {
+    return {
+      gradient: "linear-gradient(180deg, #020617 0%, #0a0f1d 40%, #1e1b4b 100%)",
+      layers: [<NightStars key="stars" />],
+    };
+  }
+
+  // If nighttime and cloudy
+  if (isDay === false && category === "cloudy") {
+    return {
+      gradient: "linear-gradient(180deg, #020617 0%, #0f172a 50%, #1e293b 100%)",
+      layers: [<NightStars key="stars" />, <CloudParticles key="clouds" />],
+    };
+  }
+
   const configs = {
     clear: {
       gradient: "linear-gradient(180deg, #0c4a6e 0%, #0369a1 40%, #0ea5e9 100%)",
@@ -229,9 +282,11 @@ function getBackgroundConfig(category) {
   return configs[category] || configs.clear;
 }
 
-export default function WeatherBackground({ condition }) {
-  const category = getConditionCategory(condition || "");
-  const config = getBackgroundConfig(category);
+export default function WeatherBackground({ condition, conditionCode, temp, windSpeed, isDay = true }) {
+  const category = conditionCode != null
+    ? getCategoryFromCode(conditionCode, temp, windSpeed)
+    : getConditionCategory(condition || "");
+  const config = getBackgroundConfig(category, isDay);
 
   return (
     <div className="weather-bg" style={{ background: config.gradient }}>
@@ -241,3 +296,4 @@ export default function WeatherBackground({ condition }) {
     </div>
   );
 }
+

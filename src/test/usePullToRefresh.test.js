@@ -10,11 +10,13 @@ describe("usePullToRefresh", () => {
   let onRefresh;
 
   beforeEach(() => {
+    vi.useFakeTimers();
     onRefresh = vi.fn(() => Promise.resolve());
     Object.defineProperty(window, "scrollY", { value: 0, writable: true, configurable: true });
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
