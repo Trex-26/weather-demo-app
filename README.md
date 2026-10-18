@@ -1,3 +1,6 @@
+live demo- https://weather-demo-app-withapi.netlify.app/
+
+
 # SkyCast — Real-Time Weather Application
 
 A production-quality weather application built with React 19, Vite, and Tailwind CSS. Powered entirely by free, open APIs (**zero API keys required**), featuring live Open-Meteo forecasts, geocoding search, GPS location detection, Air Quality Index (AQI), 24-hour hourly breakdown, 7-day extended forecasts, interactive precipitation radar maps, and client-side offline caching.
@@ -92,9 +95,6 @@ Runs the 60-test Vitest test suite covering unit conversions, weather mappers, c
 npm run build
 npm run preview
 ```
-
----
-live demo- https://weather-demo-app-withapi.netlify.app/
 
 ## 🔒 Security & Privacy
 
